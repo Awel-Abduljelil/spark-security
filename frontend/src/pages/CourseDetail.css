@@ -1,0 +1,97 @@
+.course-detail {
+  padding-bottom: 6rem;
+}
+
+.course-detail__layout {
+  display: grid;
+  gap: var(--space-xl);
+  width: min(100% - var(--space-lg) * 2, 72rem);
+  margin-inline: auto;
+}
+
+.course-detail__sections {
+  display: grid;
+  align-content: start;
+  gap: var(--space-2xl);
+  min-width: 0;
+}
+
+.course-section {
+  min-width: 0;
+}
+
+.course-section h2 {
+  margin: 0 0 var(--space-md);
+  font-size: clamp(var(--font-lg), 5vw, var(--font-xl));
+  line-height: var(--line-2xl);
+}
+
+.course-detail__sections > .ethics-note,
+.course-detail__sections > .faq-section {
+  width: 100%;
+  margin: 0;
+}
+
+.course-detail__sections > .faq-section {
+  padding-block: var(--space-lg);
+}
+
+.course-detail__sections > .faq-section .faq-section__container {
+  width: 100%;
+}
+
+.course-detail__sections > .faq-section .faq-section__heading {
+  margin-bottom: var(--space-md);
+}
+
+.course-detail__sections > .faq-section .faq-section__eyebrow {
+  display: none;
+}
+
+.course-detail__sections > .faq-section .faq-section__heading h2 {
+  margin: 0;
+  font-size: clamp(var(--font-lg), 5vw, var(--font-xl));
+}
+
+.course-detail__sections > .ethics-note {
+  padding-block: var(--space-md);
+}
+
+.course-not-found {
+  width: min(100% - var(--space-lg) * 2, 72rem);
+  min-height: 50vh;
+  margin-inline: auto;
+  padding-block: var(--space-3xl);
+}
+
+.course-not-found a {
+  color: var(--accent);
+}
+
+@media (min-width: 42rem) {
+  .course-detail__layout {
+    width: min(100% - var(--space-2xl) * 2, 72rem);
+    grid-template-columns: minmax(0, 1fr) minmax(15rem, 19rem);
+    align-items: start;
+  }
+
+  .course-detail__sections {
+    grid-column: 1;
+  }
+
+  .course-enrollment {
+    top: 20vh;
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .course-related {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (min-width: 64rem) {
+  .course-detail {
+    padding-bottom: 0;
+  }
+}

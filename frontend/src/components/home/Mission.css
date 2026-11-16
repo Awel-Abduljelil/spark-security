@@ -1,0 +1,172 @@
+.mission-section {
+  position: relative;
+  display: grid;
+  gap: var(--space-xl);
+  width: min(100% - var(--space-lg) * 2, 72rem);
+  margin: 0 auto var(--space-3xl);
+  padding: var(--space-xl) 0;
+  border-top: 1px solid var(--border-dim);
+  border-bottom: 1px solid var(--border-dim);
+}
+
+.mission-section__copy {
+  max-width: 34rem;
+}
+
+.mission-section__eyebrow {
+  margin: 0 0 var(--space-xs);
+  color: var(--accent);
+  font-size: var(--font-xs);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.mission-section h2 {
+  margin: 0 0 var(--space-sm);
+  font-size: clamp(var(--font-xl), 5vw, 2.25rem);
+  line-height: 1.12;
+}
+
+.mission-section__copy > p:not(.mission-section__eyebrow) {
+  margin: 0;
+  color: var(--ink-dim);
+  font-size: var(--font-sm);
+}
+
+.mission-section__link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  margin-top: var(--space-md);
+  padding: 0.65rem 1rem;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--bg);
+  font-size: var(--font-sm);
+  font-weight: 700;
+  text-decoration: none;
+  transition: background-color 160ms ease, box-shadow 160ms ease;
+}
+
+.mission-section__link span {
+  display: inline-block;
+  transition: transform 180ms ease;
+}
+
+.mission-section__link:hover {
+  background: color-mix(in srgb, var(--accent), white 15%);
+  box-shadow: 0 0 1.5rem var(--accent-glow);
+}
+
+.mission-section__link:hover span {
+  transform: translateX(0.25rem);
+}
+
+.mission-section__pillars {
+  display: grid;
+  align-content: center;
+  gap: var(--space-md);
+}
+
+.mission-pillar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.mission-pillar__icon {
+  display: grid;
+  flex: 0 0 2.6rem;
+  width: 2.6rem;
+  aspect-ratio: 1;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--accent) 50%, transparent);
+  border-radius: 0.8rem;
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: var(--font-xs);
+  box-shadow: 0 0 1.4rem color-mix(in srgb, var(--accent) 10%, transparent);
+}
+
+.mission-pillar h3 {
+  margin: 0;
+  font-size: var(--font-sm);
+}
+
+.mission-pillar p {
+  margin: 0.2rem 0 0;
+  color: var(--ink-dim);
+  font-size: var(--font-xs);
+}
+
+.mission-section__visual {
+  position: relative;
+  display: grid;
+  min-height: 12rem;
+  overflow: hidden;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--accent) 28%, transparent);
+  border-radius: 1rem;
+  background:
+    repeating-linear-gradient(90deg, transparent 0 1.8rem, color-mix(in srgb, var(--accent) 8%, transparent) 1.85rem 1.9rem),
+    radial-gradient(ellipse at center, color-mix(in srgb, var(--accent) 22%, transparent), transparent 65%),
+    #090708;
+  perspective: 30rem;
+}
+
+.mission-section__visual::before,
+.mission-section__visual::after {
+  position: absolute;
+  width: 75%;
+  height: 140%;
+  border: 1px solid color-mix(in srgb, var(--accent) 28%, transparent);
+  content: "";
+  transform: rotateY(55deg);
+}
+
+.mission-section__visual::after {
+  transform: rotateY(-55deg);
+}
+
+.mission-section__server {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  width: 66%;
+  gap: 0.5rem;
+  padding: var(--space-md);
+  border: 1px solid color-mix(in srgb, var(--accent) 60%, transparent);
+  border-radius: 0.8rem;
+  background: linear-gradient(145deg, color-mix(in srgb, var(--accent) 12%, #050505), #080708);
+  box-shadow: 0 1rem 3rem color-mix(in srgb, var(--accent) 20%, transparent);
+}
+
+.mission-section__server span {
+  height: 0.55rem;
+  border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
+  border-radius: 999px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 80%, transparent) 0 12%, #080c08 12%);
+}
+
+.mission-section__server strong {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  color: var(--accent);
+  font-family: var(--font-heading);
+  font-size: clamp(2.5rem, 8vw, 4.5rem);
+  line-height: 1;
+  text-shadow: 0 0 1.5rem color-mix(in srgb, var(--accent) 80%, transparent);
+  transform: translate(-50%, -50%) skewY(-12deg);
+}
+
+@media (min-width: 42rem) {
+  .mission-section {
+    width: min(100% - var(--space-2xl) * 2, 72rem);
+    grid-template-columns: minmax(0, 1fr) minmax(12rem, 0.75fr) minmax(13rem, 0.8fr);
+    align-items: center;
+    gap: var(--space-lg);
+  }
+}

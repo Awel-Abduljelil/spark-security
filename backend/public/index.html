@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#050505">
+<title>Spark Security | Learn, Secure, Innovate</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/app.css">
+</head>
+<body>
+<header class="nav"><div class="wrap">
+<a class="logo" href="#home"><i></i>Spark Security</a>
+<button class="burger" id="burger" aria-label="Toggle menu" aria-expanded="false">Menu</button>
+<nav class="links" id="links" aria-label="Main">
+<a href="#home">Home</a><a href="#courses">Courses</a><a href="#process">Learning process</a><a href="#mentors">Mentors</a><a href="#services">Services</a><a href="#about">About</a><a href="#faq">FAQ</a><a href="#contact">Contact</a>
+<a class="btn btn-p" href="#courses">Enroll now</a></nav>
+</div></header>
+<main>
+<div class="view on" id="v-home">
+<section class="hero" id="home"><div class="wrap grid">
+<div><h1 id="h-title"></h1><p class="lead" id="h-text"></p>
+<div class="row"><a class="btn btn-p" href="#courses">Explore courses</a><a class="btn btn-o" href="#about">Discover our mission</a></div>
+<p class="tag">Learn • Secure • Innovate</p></div>
+<div class="term" aria-hidden="true"><div class="bar"><span></span><span></span><span></span></div>
+<div><b>spark@lab</b>:~$ nmap -sV target.lab</div><div>22/tcp open ssh</div><div>80/tcp open http</div>
+<div><b>spark@lab</b>:~$ ./report --scope authorized</div><div class="ok">✔ findings documented</div><div class="ok">✔ remediation reviewed with mentor</div></div>
+</div></section>
+<section class="alt" id="about"><div class="wrap"><h2>About Spark Security</h2><p class="lead" id="a-text"></p><p class="lead" id="a-mission" style="color:var(--tx)"></p>
+<div class="g3">
+<div class="card"><span class="ic">[edu]</span><h3>Education</h3><p>Structured cybersecurity courses and practical learning.</p></div>
+<div class="card"><span class="ic">[com]</span><h3>Community</h3><p>Mentors, instructors, collaboration, and knowledge sharing.</p></div>
+<div class="card"><span class="ic">[svc]</span><h3>Security services</h3><p>Authorized penetration testing, vulnerability assessments, and security consulting.</p></div>
+</div></div></section>
+<section><div class="wrap"><h2>What you can learn</h2><p class="lead">Eight areas, from first principles to hands-on testing.</p><div class="g4" id="areas"></div></div></section>
+<section class="alt" id="process"><div class="wrap"><h2>How learning works</h2><p class="lead">From choosing a course to practical feedback.</p>
+<ol class="steps">
+<li><strong>Explore courses.</strong> Browse what’s open for enrollment.</li>
+<li><strong>Read the details.</strong> Check the description and requirements.</li>
+<li><strong>Register.</strong> Fill in the short enrollment form.</li>
+<li><strong>Pay and upload your receipt.</strong> Bank transfer or mobile money.</li>
+<li><strong>Wait for verification.</strong> An administrator reviews your payment.</li>
+<li><strong>Get confirmation.</strong> Check your status for private group instructions.</li>
+<li><strong>Learn and practice.</strong> Follow lessons, complete exercises, get feedback.</li>
+</ol></div></section>
+<section id="courses"><div class="wrap"><h2>Courses</h2><p class="lead">Every published course is open for enrollment unless marked closed.</p>
+<div class="g3" id="clist"></div><div class="row" style="margin-top:24px"><a class="btn btn-o" href="#status">Check my enrollment status</a></div></div></section>
+<section class="alt" id="mentors"><div class="wrap"><h2>Mentors and instructors</h2><div class="g3" id="mlist"></div></div></section>
+<section id="services"><div class="wrap"><h2>Security services</h2><p class="lead">Professional testing, performed only with proper written authorization.</p><div class="g3" id="svcs"></div>
+<div class="row" style="margin-top:28px"><a class="btn btn-p" href="#contact">Request a security assessment</a></div></div></section>
+<section class="alt faq" id="faq"><div class="wrap" style="max-width:860px"><h2>Frequently asked questions</h2><div id="faqs"></div></div></section>
+<section class="cta"><div class="wrap"><h2 id="cta-t"></h2><p class="lead" id="cta-p"></p><div class="row"><a class="btn btn-p" href="#courses">Explore courses</a></div></div></section>
+<section id="contact"><div class="wrap" style="max-width:760px"><h2>Contact us</h2><p class="lead">Questions about courses, enrollment, or a security assessment?</p>
+<form class="form" id="cf" novalidate>
+<div class="fg"><label for="cn">Name</label><input id="cn" autocomplete="name"></div>
+<div class="fg"><label for="ce">Email</label><input id="ce" type="email" autocomplete="email"></div>
+<div class="fg"><label for="cm">Message</label><textarea id="cm"></textarea></div>
+<input class="hp" id="cw" tabindex="-1" autocomplete="off" aria-hidden="true">
+<div id="cmsg" role="status"></div><button class="btn btn-p" type="submit">Send message</button></form></div></section>
+</div>
+<div class="view" id="v-course"><section><div class="wrap" id="course-body"></div></section></div>
+<div class="view" id="v-enroll"><section><div class="wrap" id="enroll-body"></div></section></div>
+<div class="view" id="v-status"><section><div class="wrap" id="status-body"></div></section></div>
+</main>
+<footer><div class="wrap"><div class="grid">
+<div><a class="logo" href="#home" style="padding:0"><i></i>Spark Security</a><p id="f-text" style="margin-top:10px;max-width:40ch"></p><div class="soc" id="f-soc"></div></div>
+<div><h3>Explore</h3><a href="#courses">Courses</a><a href="#mentors">Mentors</a><a href="#services">Services</a><a href="#faq">FAQ</a><a href="#status">Check status</a></div>
+<div><h3>Contact</h3><div id="f-contact"></div></div></div>
+<p class="copy">© <span id="yr"></span> Spark Security. Learn • Secure • Innovate</p></div></footer>
+<script src="/site.js"></script>
+</body>
+</html>

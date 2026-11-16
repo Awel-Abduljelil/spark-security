@@ -1,0 +1,108 @@
+.mentor-carousel {
+  --mentor-slide-width: clamp(13.5rem, 19vw, 16rem);
+  display: grid;
+  gap: var(--space-lg);
+  perspective: 1200px;
+}
+.mentor-carousel__controls { display: flex; align-items: center; justify-content: center; gap: var(--space-lg); }
+.mentor-carousel__arrow {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--accent);
+  font-size: 1.4rem;
+}
+.mentor-carousel__arrow:disabled { opacity: 0.35; cursor: not-allowed; }
+.mentor-carousel__dots { display: flex; align-items: center; gap: 0.55rem; }
+.mentor-carousel__dot {
+  width: 0.6rem;
+  height: 0.6rem;
+  min-width: 0;
+  padding: 0;
+  border: 1px solid var(--ink-dim);
+  border-radius: 50%;
+  background: transparent;
+}
+.mentor-carousel__dot.is-active { width: 1.5rem; border-color: var(--accent); border-radius: 999px; background: var(--accent); }
+.mentor-carousel__viewport {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  width: 100%;
+  padding-block: 1.5rem 2rem;
+  padding-inline: calc((100% - var(--mentor-slide-width)) / 2);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: calc((100% - var(--mentor-slide-width)) / 2);
+  scrollbar-width: none;
+  touch-action: pan-x pan-y;
+  cursor: grab;
+}
+.mentor-carousel__viewport::-webkit-scrollbar { display: none; }
+.mentor-carousel__viewport:active { cursor: grabbing; }
+.mentor-carousel__slide {
+  --offset: 0;
+  --distance: 0;
+  --scale: 1;
+  --slide-opacity: 1;
+  --rotation: 0deg;
+  flex: 0 0 var(--mentor-slide-width);
+  padding: 0;
+  overflow: hidden;
+  border-color: var(--border);
+  opacity: var(--slide-opacity);
+  scroll-snap-align: center;
+  transform: translateZ(calc(var(--distance) * -2rem)) rotateY(var(--rotation)) scale(var(--scale));
+  transform-origin: center center;
+  transition: transform 450ms ease-out, opacity 450ms ease-out, border-color 450ms ease-out, box-shadow 450ms ease-out;
+  will-change: transform, opacity;
+  cursor: pointer;
+}
+.mentor-carousel__slide.is-active {
+  z-index: 1;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent), 0 0 30px rgb(57 255 20 / 0.2);
+  cursor: default;
+}
+.mentor-carousel .mentor-carousel__slide:hover {
+  transform: translateZ(calc(var(--distance) * -2rem)) rotateY(var(--rotation)) scale(var(--scale));
+}
+.mentor-carousel__slide:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
+.mentor-card__photo--empty { background: linear-gradient(145deg, #121812, #080a08); }
+.mentor-card__body { min-height: 15rem; align-content: start; }
+.mentor-card__body h3 { overflow-wrap: anywhere; }
+.mentor-card__bio { line-height: 1.5; }
+.mentor-card__bio--clamped {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+.mentor-card__achievements { display: grid; gap: var(--space-xs); margin-top: var(--space-xs); }
+.mentor-card__achievements h4 { margin: 0; color: var(--ink); font-size: var(--font-sm); }
+.mentor-card__achievements ul { margin: 0; padding-inline-start: 1.25rem; color: var(--ink-dim); }
+.mentor-card__links { display: flex; flex-wrap: wrap; gap: var(--space-md); margin-top: var(--space-sm); }
+.mentor-card__links a { color: var(--accent); text-underline-offset: 0.2em; }
+.mentor-card__links a:focus-visible, .mentor-carousel__arrow:focus-visible, .mentor-carousel__dot:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+@media (max-width: 48rem) {
+  .mentor-carousel { --mentor-slide-width: 78vw; }
+  .mentor-carousel__viewport { gap: var(--space-sm); }
+  .mentor-carousel .mentor-carousel__slide,
+  .mentor-carousel .mentor-carousel__slide:hover {
+    transform: translateZ(calc(var(--distance) * -2rem)) scale(var(--scale));
+  }
+  .mentor-carousel__controls { gap: var(--space-md); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mentor-carousel__slide { --rotation: 0deg !important; transition: opacity 150ms linear, transform 150ms linear; }
+  .mentor-carousel__viewport { scroll-behavior: auto; }
+}

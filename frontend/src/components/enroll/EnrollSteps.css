@@ -1,0 +1,45 @@
+.enroll-steps-card {
+  margin: 0;
+}
+
+.enroll-steps-card h2 {
+  margin: 0 0 var(--space-md);
+  font-size: var(--font-lg);
+}
+
+.enroll-steps {
+  display: grid;
+  gap: var(--space-md);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.enroll-steps__item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-md);
+}
+
+.enroll-steps__number {
+  display: grid;
+  flex: 0 0 2rem;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
+  border: 1px solid var(--accent);
+  border-radius: 50%;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.enroll-steps__item h3 {
+  margin: 0;
+  font-size: var(--font-md);
+}
+
+.enroll-steps__item p {
+  margin: var(--space-xxs) 0 0;
+  color: var(--ink-dim);
+  font-size: var(--font-sm);
+}

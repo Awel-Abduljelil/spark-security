@@ -1,0 +1,11 @@
+.course-related {
+  border-top: 1px solid var(--border-dim);
+}
+
+.course-related .course-preview {
+  padding-block: var(--space-2xl);
+}
+
+.course-related .course-preview__container {
+  width: 100%;
+}

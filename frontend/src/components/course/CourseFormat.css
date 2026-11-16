@@ -1,0 +1,25 @@
+.course-format__details {
+  display: grid;
+  gap: var(--space-md);
+  margin: 0;
+}
+
+.course-format__item {
+  display: grid;
+  gap: var(--space-xxs);
+}
+
+.course-format__item dt {
+  color: var(--ink-dim);
+  font-size: var(--font-xs);
+}
+
+.course-format__item dd {
+  margin: 0;
+}
+
+@media (min-width: 42rem) {
+  .course-format__details {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

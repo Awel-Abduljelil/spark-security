@@ -1,0 +1,53 @@
+.enroll-page {
+  width: min(100% - var(--space-lg) * 2, 72rem);
+  margin-inline: auto;
+  padding-block: var(--space-2xl);
+}
+
+.enroll-page__heading {
+  max-width: 46rem;
+  margin-bottom: var(--space-xl);
+}
+
+.enroll-page__eyebrow {
+  margin: 0 0 var(--space-xs);
+  color: var(--accent);
+  font-size: var(--font-xs);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.enroll-page__heading h1 {
+  margin: 0 0 var(--space-sm);
+  font-size: clamp(var(--font-2xl), 8vw, var(--font-3xl));
+  line-height: var(--line-2xl);
+}
+
+.enroll-page__heading > p:last-child {
+  margin: 0;
+  color: var(--ink-dim);
+}
+
+.enroll-page__layout {
+  display: grid;
+  gap: var(--space-lg);
+}
+
+.enroll-page__instructions {
+  display: grid;
+  align-content: start;
+  gap: var(--space-lg);
+}
+
+@media (min-width: 42rem) {
+  .enroll-page {
+    width: min(100% - var(--space-2xl) * 2, 72rem);
+    padding-block: var(--space-3xl);
+  }
+
+  .enroll-page__layout {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    align-items: start;
+  }
+}

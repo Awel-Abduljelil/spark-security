@@ -1,0 +1,55 @@
+/* ==========================================
+   CIRCUIT TRACE BACKGROUND
+   ========================================== */
+
+.circuitTracesContainer {
+    position: relative;
+    isolation: isolate;
+}
+
+.circuitTraces {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: var(--z-bg);
+    opacity: 0.55;
+}
+
+.circuitTrace,
+.circuitPulse {
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.circuitTrace {
+    stroke: rgb(var(--fx-green) / 0.16);
+    stroke-width: 0.14;
+}
+
+.circuitPulse {
+    stroke: rgb(var(--fx-green-soft) / 0.8);
+    stroke-width: 0.24;
+    stroke-dasharray: 0.8 4.5;
+    stroke-dashoffset: 5.3;
+    animation: circuitPulseTravel 5s linear infinite;
+    filter: drop-shadow(0 0 0.4px rgb(var(--fx-green) / 0.8));
+}
+
+.circuitNode {
+    fill: rgb(var(--fx-node) / 0.5);
+}
+
+@keyframes circuitPulseTravel {
+    to {
+        stroke-dashoffset: -5.3;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .circuitPulse {
+        display: none;
+    }
+}

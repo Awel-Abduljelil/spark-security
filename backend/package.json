@@ -1,0 +1,13 @@
+{
+  "name": "spark-security",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22.13" },
+  "scripts": {
+    "start": "node --disable-warning=ExperimentalWarning --env-file-if-exists=.env server/index.js",
+    "dev": "node --watch --disable-warning=ExperimentalWarning --env-file-if-exists=.env server/index.js",
+    "test": "node --disable-warning=ExperimentalWarning --test test/flow.test.js"
+  },
+  "dependencies": { "express": "^5.1.0", "multer": "^2.0.2" }
+}

@@ -1,0 +1,140 @@
+/* Element reset */
+.reset {
+    all: revert;
+}
+
+/* Typography */
+.font-xs {
+    font-size: var(--font-xs);
+    line-height: var(--line-xs);
+}
+.font-sm {
+    font-size: var(--font-sm);
+    line-height: var(--line-sm);
+}
+.font-md {
+    font-size: var(--font-md);
+    line-height: var(--line-md);
+}
+.font-lg {
+    font-size: var(--font-lg);
+    line-height: var(--line-lg);
+}
+.font-xl {
+    font-size: var(--font-xl);
+    line-height: var(--line-xl);
+}
+.font-2xl {
+    font-size: var(--font-2xl);
+    line-height: var(--line-2xl);
+}
+.font-3xl {
+    font-size: var(--font-3xl);
+    line-height: var(--line-3xl);
+}
+
+/* Text */
+.ink-dim {
+    color: var(--ink-dim);
+}
+.text-center {
+    text-align: center;
+}
+
+/* Layout */
+.container {
+    width: min(80ch, 100%);
+    margin-inline: auto;
+    padding-inline: var(--space-md);
+    box-sizing: border-box;
+}
+.block {
+    display: block;
+}
+.flex {
+    display: flex;
+}
+.flex-wrap {
+    flex-wrap: wrap;
+}
+.my-auto {
+    margin-block: auto;
+}
+
+/* Spacing */
+.mx-xxs {
+    margin-inline: var(--space-xxs);
+}
+.mx-xs {
+    margin-inline: var(--space-xs);
+}
+.mx-sm {
+    margin-inline: var(--space-sm);
+}
+.mx-md {
+    margin-inline: var(--space-md);
+}
+.mx-lg {
+    margin-inline: var(--space-lg);
+}
+.mx-xl {
+    margin-inline: var(--space-xl);
+}
+
+.my-xxs {
+    margin-block: var(--space-xxs);
+}
+.my-xs {
+    margin-block: var(--space-xs);
+}
+.my-sm {
+    margin-block: var(--space-sm);
+}
+.my-md {
+    margin-block: var(--space-md);
+}
+.my-lg {
+    margin-block: var(--space-lg);
+}
+.my-xl {
+    margin-block: var(--space-xl);
+}
+.my-2xl {
+    margin-block: var(--space-2xl);
+}
+.my-3xl {
+    margin-block: var(--space-3xl);
+}
+
+.gap-xs {
+    gap: var(--space-xs);
+}
+.gap-sm {
+    gap: var(--space-sm);
+}
+.gap-md {
+    gap: var(--space-md);
+}
+.gap-lg {
+    gap: var(--space-lg);
+}
+
+/* Stacking */
+.z-1 {
+    z-index: 1;
+}
+.z-2 {
+    z-index: 2;
+}
+.z-3 {
+    z-index: 3;
+}
+.z-modal {
+    z-index: var(--z-modal);
+}
+.z-tooltip {
+    z-index: var(--z-tooltip);
+}
+.z-popover {
+    z-index: var(--z-popover);
+}

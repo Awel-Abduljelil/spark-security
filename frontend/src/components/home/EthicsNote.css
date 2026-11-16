@@ -1,0 +1,32 @@
+.ethics-note {
+  width: min(100% - var(--space-lg) * 2, 72rem);
+  margin-inline: auto;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-md);
+  padding-block: var(--space-xl);
+  color: var(--ink-dim);
+  font-size: var(--font-sm);
+}
+
+@media (min-width: 42rem) {
+  .ethics-note {
+    width: min(100% - var(--space-2xl) * 2, 72rem);
+  }
+}
+
+.ethics-note p {
+  margin: 0;
+}
+
+.ethics-note__icon {
+  display: grid;
+  flex: 0 0 1.5rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  place-items: center;
+  border: 1px solid var(--warning);
+  border-radius: 50%;
+  color: var(--warning);
+  font-weight: 700;
+}

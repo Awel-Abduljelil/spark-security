@@ -1,0 +1,49 @@
+.payment-info {
+  margin: 0;
+}
+
+.payment-info h2 {
+  margin: 0 0 var(--space-md);
+  font-size: var(--font-lg);
+}
+
+.payment-info__methods {
+  display: grid;
+  gap: var(--space-md);
+}
+
+.payment-method {
+  padding: var(--space-md);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--border-radius);
+  background: var(--surface-dim);
+}
+
+.payment-method h3 {
+  margin: 0;
+  font-size: var(--font-md);
+}
+
+.payment-method p {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-xs);
+  margin: var(--space-sm) 0 0;
+  font-size: var(--font-sm);
+}
+
+.payment-method p span {
+  color: var(--ink-dim);
+}
+
+.payment-method strong {
+  overflow-wrap: anywhere;
+  text-align: right;
+}
+
+.payment-info__reference {
+  margin: var(--space-md) 0 0;
+  color: var(--warning);
+  font-size: var(--font-sm);
+}

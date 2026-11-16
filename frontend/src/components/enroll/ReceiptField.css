@@ -1,0 +1,43 @@
+.receipt-field {
+  display: grid;
+  gap: var(--space-sm);
+  margin: 0;
+}
+
+.receipt-field legend {
+  font-size: var(--font-sm);
+  font-weight: 600;
+}
+
+.receipt-field > div:not(.receipt-field__toggle) {
+  display: grid;
+  gap: var(--space-xs);
+}
+
+.receipt-field label {
+  font-size: var(--font-sm);
+  font-weight: 600;
+}
+
+.receipt-field__toggle {
+  display: flex;
+  gap: var(--space-xs);
+}
+
+.receipt-field__toggle button {
+  flex: 1 1 0;
+  font-size: var(--font-sm);
+}
+
+.receipt-field small {
+  color: var(--ink-dim);
+  font-size: var(--font-xs);
+}
+
+.receipt-field .form-error {
+  color: var(--error);
+}
+
+.receipt-field__filename {
+  overflow-wrap: anywhere;
+}

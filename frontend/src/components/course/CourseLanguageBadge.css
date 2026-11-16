@@ -1,0 +1,30 @@
+.course-language-badge {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: var(--space-xxs) var(--space-xs);
+  border: 1px solid;
+  border-radius: 999px;
+  font-size: var(--font-xs);
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.course-language-badge--en {
+  border-color: #39ff14;
+  background: #10220e;
+  color: #b6ffab;
+}
+
+.course-language-badge--om {
+  border-color: #38d9ff;
+  background: #0c2027;
+  color: #a4efff;
+}
+
+.course-language-badge--am {
+  border-color: #d3a6ff;
+  background: #21152b;
+  color: #e8ceff;
+  font-family: "Noto Sans Ethiopic", var(--font-family);
+}
