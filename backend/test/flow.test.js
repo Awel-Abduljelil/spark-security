@@ -6,6 +6,7 @@ import path from 'node:path';
 
 process.env.DATA_DIR = fs.mkdtempSync(path.join(os.tmpdir(), 'spark-'));
 process.env.ADMIN_PASSWORD = 'Sparkadmin123';
+process.env.ADMIN_PATH = '0123456789abcdef0123456789abcdef';
 const { app } = await import('../server/index.js');
 let server, base, cookie = '';
 const PNG = Buffer.concat([Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]), Buffer.alloc(64)]);
@@ -32,18 +33,20 @@ test('admin routes need auth, CSRF header, and correct credentials', async () =>
   assert.equal((await call('POST', '/api/admin/login', { email: 'admin@sparksecurity.local', password: 'wrong' })).status, 401);
   assert.equal((await call('POST', '/api/admin/login', { email: 'admin@sparksecurity.local', password: 'Sparkadmin123' })).status, 200);
   assert.ok((await call('GET', '/api/admin/dashboard')).json.drafts >= 2);
+  const settings = await call('GET', '/api/admin/settings');
+  assert.equal(settings.status, 200);
+  assert.equal((await call('PUT', '/api/admin/settings', { contact_email: 'admin@example.test' })).status, 200);
+  assert.equal((await call('GET', '/api/admin/settings')).json.contact_email, 'admin@example.test');
+  assert.equal((await call('GET', '/api/admin/mentors')).status, 200);
+  assert.equal((await call('GET', '/api/admin/faqs')).status, 200);
+  assert.equal((await call('GET', '/api/admin/payment-methods')).status, 200);
+  assert.ok((await call('GET', '/api/admin/audit')).json.some((entry) => entry.action === 'settings_updated'));
 });
 
-test('legacy admin is served with its assets on the additional-settings path', async () => {
-  const page = await fetch(base + '/legacy-admin/');
-  const html = await page.text();
-  assert.equal(page.status, 200);
-  assert.match(html, /\/legacy-admin\/admin\.js/);
-  assert.match(html, /\/legacy-admin\/admin\.css/);
-  for (const asset of ['app.css', 'admin.css', 'admin.js']) {
-    const response = await fetch(`${base}/legacy-admin/${asset}`);
-    assert.equal(response.status, 200, `${asset} should load`);
-  }
+test('legacy admin path redirects to the configured admin URL', async () => {
+  const page = await fetch(base + '/legacy-admin/', { redirect: 'manual' });
+  assert.equal(page.status, 302);
+  assert.equal(page.headers.get('location'), `/${process.env.ADMIN_PATH}/settings/website`);
 });
 
 test('mentor admin validates links, uploads photos, audits changes, and publishes in order', async () => {
@@ -156,7 +159,11 @@ test('status lookup needs ref + phone; approval, capacity, private receipt', asy
 test('password change, contact message, and 2FA login', async () => {
   const f = new FormData(); // contact
   assert.equal((await call('POST', '/api/contact', { name: 'Sam', email: 's@x.co', message: 'Hello there, quick question.' })).status, 201);
-  assert.equal((await call('GET', '/api/admin/messages')).json.length, 1);
+  const messages = (await call('GET', '/api/admin/messages')).json;
+  assert.equal(messages.length, 1);
+  assert.equal((await call('PUT', `/api/admin/messages/${messages[0].id}/read`)).status, 200);
+  assert.equal((await call('GET', '/api/admin/messages')).json[0].read, 1);
+  assert.ok((await call('GET', '/api/admin/audit')).json.some((entry) => entry.action === 'message_marked_read'));
   assert.equal((await call('POST', '/api/admin/password', { current: 'Sparkadmin123', next: 'short', confirm: 'short' })).status, 400);
   assert.equal((await call('POST', '/api/admin/password', { current: 'Sparkadmin123', next: 'NewStrongPass9', confirm: 'NewStrongPass9' })).status, 200);
   const { totp } = await import('./totp.js');
@@ -213,6 +220,12 @@ test('React API integrates courses, cohorts, enrollment, and admin workflows', a
   assert.equal(created.status, 201);
   assert.equal(created.json.content.weeks[0].title, 'Foundations');
   assert.equal(created.json.language, 'en');
+  const featuredCard = (await call('GET', '/api/app/courses?lang=en')).json
+    .find((course) => course.slug === 'react-api-integration');
+  assert.equal(featuredCard.cover, '/media/course-cover.webp');
+  assert.equal(featuredCard.priceEtb, 0);
+  assert.equal(featuredCard.discountPriceEtb, null);
+  assert.equal(featuredCard.enrollmentOpen, false);
 
   assert.equal((await call('PATCH', '/api/app/admin/courses/react-api-integration', {
     language: 'invalid',

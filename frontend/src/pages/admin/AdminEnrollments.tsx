@@ -18,6 +18,7 @@ import {
   type EnrollmentFilters,
   type EnrollmentStatus,
 } from "../../lib/adminApi";
+import { adminUrl } from "../../lib/adminPath";
 
 const statuses: Array<{ label: string; value: EnrollmentStatus | "all" }> = [
   { label: "Pending", value: "pending" },
@@ -258,7 +259,7 @@ export function AdminEnrollments() {
     setLogoutLoading(true);
     try {
       await logout();
-      window.location.assign("/admin/login");
+      window.location.assign(adminUrl("/login"));
     } catch (error) {
       setActionError(
         error instanceof Error ? error.message : "Could not sign out.",

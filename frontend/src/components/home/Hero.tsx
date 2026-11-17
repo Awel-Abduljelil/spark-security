@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
-import hackerHero from "../../assets/hacker-hero.webp";
 import { useLanguage } from "../../i18n/useLanguage";
 import { DotNetworks } from "../bg/DotNetworks";
+import { HeroCourseCarousel } from "./HeroCourseCarousel";
 import "./Hero.css";
 
 export function Hero() {
@@ -37,21 +37,7 @@ export function Hero() {
             </div>
           </div>
 
-          <div
-            className="hero-visual"
-            role="img"
-            aria-label={t("A hooded hacker using a laptop in a green digital room")}
-          >
-            <img
-              className="hero-visual__art"
-              src={hackerHero}
-              alt=""
-              width="500"
-              height="280"
-              decoding="async"
-              fetchPriority="high"
-            />
-          </div>
+          <HeroCourseCarousel />
         </div>
       </section>
     </DotNetworks>

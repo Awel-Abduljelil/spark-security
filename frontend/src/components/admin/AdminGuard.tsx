@@ -1,6 +1,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Navigate } from "react-router-dom";
 import { me } from "../../lib/adminApi";
+import { adminUrl } from "../../lib/adminPath";
 
 interface AdminGuardProps {
   children: ReactNode;
@@ -30,6 +31,6 @@ export function AdminGuard({ children }: AdminGuardProps) {
       </p>
     );
   }
-  if (!authorized) return <Navigate to="/admin/login" replace />;
+  if (!authorized) return <Navigate to={adminUrl("/login")} replace />;
   return children;
 }

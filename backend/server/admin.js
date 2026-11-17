@@ -212,7 +212,7 @@ r.put('/settings', (q, s) => {
   log(q, 'settings_updated'); s.json({ ok: true });
 });
 r.get('/messages', (q, s) => s.json(db.prepare('SELECT * FROM messages ORDER BY id DESC LIMIT 200').all()));
-r.put('/messages/:id/read', (q, s) => { db.prepare('UPDATE messages SET read=1 WHERE id=?').run(+q.params.id); s.json({ ok: true }); });
+r.put('/messages/:id/read', (q, s) => { db.prepare('UPDATE messages SET read=1 WHERE id=?').run(+q.params.id); log(q, 'message_marked_read', 'message:' + q.params.id); s.json({ ok: true }); });
 r.delete('/messages/:id', (q, s) => { db.prepare('DELETE FROM messages WHERE id=?').run(+q.params.id); log(q, 'message_deleted'); s.json({ ok: true }); });
 r.get('/audit', (q, s) => s.json(db.prepare('SELECT email,action,entity,detail,ip,created_at FROM audit ORDER BY id DESC LIMIT 200').all()));
 

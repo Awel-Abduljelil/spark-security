@@ -10,6 +10,7 @@ import {
   type AdminCohort,
   type AdminCourseListItem,
 } from "../../lib/adminApi";
+import { adminUrl } from "../../lib/adminPath";
 
 export function AdminCohorts() {
   const [cohorts, setCohorts] = useState<AdminCohort[] | null>(null);
@@ -237,7 +238,7 @@ export function AdminCohorts() {
                           )}
                           <Link
                             className="admin-link-button"
-                            to={`/admin?cohortId=${cohort.id}`}
+                            to={`${adminUrl()}?cohortId=${cohort.id}`}
                           >
                             View enrollments
                           </Link>

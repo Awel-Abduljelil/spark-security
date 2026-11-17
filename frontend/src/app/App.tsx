@@ -20,6 +20,7 @@ import { ScrollToHash } from "../components/layout/ScrollToHash";
 import { Footer } from "../components/layout/Footer";
 import { EffectGlitch } from "../components/layout/EffectGlitch";
 import { LanguageProvider } from "../i18n/LanguageContext";
+import { ADMIN_PATH, adminUrl } from "../lib/adminPath";
 
 const AdminGuard = lazy(() =>
   import("../components/admin/AdminGuard").then((module) => ({
@@ -56,14 +57,19 @@ const AdminCourseEditor = lazy(() =>
     default: module.AdminCourseEditor,
   })),
 );
+const AdminManagement = lazy(() =>
+  import("../pages/admin/AdminManagement").then((module) => ({
+    default: module.AdminManagement,
+  })),
+);
 
 function AppRoutes() {
   const { pathname } = useLocation();
-  if (pathname.startsWith("/admin")) {
+  if (pathname === ADMIN_PATH || pathname.startsWith(`${ADMIN_PATH}/`)) {
     return (
       <Routes>
         <Route
-          path="/admin/login"
+          path={adminUrl("/login")}
           element={
             <Suspense fallback={<p>Loading admin...</p>}>
               <AdminLayout>
@@ -73,7 +79,7 @@ function AppRoutes() {
           }
         />
         <Route
-          path="/admin/courses/new"
+          path={adminUrl("/courses/new")}
           element={
             <Suspense fallback={<p>Loading admin...</p>}>
               <AdminGuard>
@@ -85,7 +91,7 @@ function AppRoutes() {
           }
         />
         <Route
-          path="/admin/courses/:slug"
+          path={adminUrl("/courses/:slug")}
           element={
             <Suspense fallback={<p>Loading admin...</p>}>
               <AdminGuard>
@@ -97,7 +103,7 @@ function AppRoutes() {
           }
         />
         <Route
-          path="/admin/courses"
+          path={adminUrl("/courses")}
           element={
             <Suspense fallback={<p>Loading admin...</p>}>
               <AdminGuard>
@@ -109,7 +115,7 @@ function AppRoutes() {
           }
         />
         <Route
-          path="/admin/cohorts"
+          path={adminUrl("/cohorts")}
           element={
             <Suspense fallback={<p>Loading admin...</p>}>
               <AdminGuard>
@@ -120,8 +126,21 @@ function AppRoutes() {
             </Suspense>
           }
         />
+        <Route path={adminUrl("/settings")} element={<Navigate to={adminUrl("/settings/website")} replace />} />
         <Route
-          path="/admin"
+          path={adminUrl("/settings/:section")}
+          element={
+            <Suspense fallback={<p>Loading admin...</p>}>
+              <AdminGuard>
+                <AdminLayout>
+                  <AdminManagement />
+                </AdminLayout>
+              </AdminGuard>
+            </Suspense>
+          }
+        />
+        <Route
+          path={adminUrl()}
           element={
             <Suspense fallback={<p>Loading admin...</p>}>
               <AdminGuard>
@@ -132,7 +151,7 @@ function AppRoutes() {
             </Suspense>
           }
         />
-        <Route path="/admin/*" element={<Navigate to="/admin" replace />} />
+        <Route path={adminUrl("/*")} element={<Navigate to={adminUrl()} replace />} />
       </Routes>
     );
   }
@@ -143,6 +162,7 @@ function AppRoutes() {
       <NavBar />
       <EffectGlitch>
         <Routes>
+          <Route path="/admin/*" element={<Navigate to="/" replace />} />
           <Route path="/" element={<Home />} />
           <Route path="/awareness" element={<Awareness />} />
           <Route path="/courses/:slug" element={<CourseDetail />} />
@@ -150,6 +170,7 @@ function AppRoutes() {
           <Route path="/about" element={<About />} />
           <Route path="/mentors" element={<Mentors />} />
           <Route path="/mentor" element={<Navigate to="/mentors" replace />} />
+          <Route path="/legacy-admin/*" element={<Navigate to={adminUrl("/settings/website")} replace />} />
           <Route path="/contact" element={<Contact />} />
         </Routes>
       </EffectGlitch>

@@ -28,8 +28,11 @@ app.use('/api/admin', admin);
 app.use('/api', pub);
 app.use('/api', (q, s) => s.status(404).json({ error: 'Not found' }));
 app.use('/media', express.static(path.join(ROOT, 'public', 'media')));
-app.get('/legacy-admin/app.css', (q, s) => s.sendFile(path.join(ROOT, 'public', 'app.css')));
-app.use('/legacy-admin', express.static(path.join(ROOT, 'public', 'admin'), { extensions: ['html'], index: 'index.html' }));
+const adminPath = process.env.ADMIN_PATH || 'admin';
+if (process.env.ADMIN_PATH && !/^[A-Za-z0-9_-]{32}$/.test(adminPath)) {
+  throw new Error('ADMIN_PATH must be exactly 32 URL-safe characters.');
+}
+app.use('/legacy-admin', (q, s) => s.redirect(302, `/${adminPath}/settings/website`));
 app.use(express.static(frontendBuilt ? frontendDist : path.join(ROOT, 'public'), { extensions: ['html'], index: 'index.html' }));
 if (frontendBuilt) {
   app.get(/^(?!\/api\/).*/, (q, s) => s.sendFile(path.join(frontendDist, 'index.html')));

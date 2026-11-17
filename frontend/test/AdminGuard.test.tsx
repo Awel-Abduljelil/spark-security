@@ -7,6 +7,7 @@ import { render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { AdminGuard } from "../src/components/admin/AdminGuard";
+import { adminUrl } from "../src/lib/adminPath";
 import { backendUp } from "./live";
 
 afterEach(() => {
@@ -19,17 +20,17 @@ describe.skipIf(!backendUp)("AdminGuard (live backend, unauthenticated)", () => 
     vi.stubGlobal("location", { assign });
 
     render(
-      <MemoryRouter initialEntries={["/admin/secret"]}>
+      <MemoryRouter initialEntries={[adminUrl("/secret")]}>
         <Routes>
           <Route
-            path="/admin/secret"
+            path={adminUrl("/secret")}
             element={
               <AdminGuard>
                 <p>admin secret</p>
               </AdminGuard>
             }
           />
-          <Route path="/admin/login" element={<p>admin login page</p>} />
+          <Route path={adminUrl("/login")} element={<p>admin login page</p>} />
         </Routes>
       </MemoryRouter>,
     );

@@ -1,5 +1,6 @@
 import { useEffect, type ReactNode } from "react";
 import { NavLink } from "react-router-dom";
+import { adminUrl } from "../../lib/adminPath";
 import "./admin.css";
 
 interface AdminLayoutProps {
@@ -27,12 +28,12 @@ export function AdminLayout({ children }: AdminLayoutProps) {
   return (
     <div className="admin-shell">
       <nav className="admin-nav" aria-label="Admin sections">
-        <NavLink to="/admin" end>
+        <NavLink to={adminUrl()} end>
           Enrollments
         </NavLink>
-        <NavLink to="/admin/cohorts">Cohorts</NavLink>
-        <NavLink to="/admin/courses">Courses</NavLink>
-        <a href="/legacy-admin/">Additional settings</a>
+        <NavLink to={adminUrl("/cohorts")}>Cohorts</NavLink>
+        <NavLink to={adminUrl("/courses")}>Courses</NavLink>
+        <NavLink to={adminUrl("/settings")}>Management</NavLink>
       </nav>
       {children}
     </div>

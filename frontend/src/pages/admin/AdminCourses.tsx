@@ -8,6 +8,7 @@ import {
   type AdminCourseStatus,
   type CourseLanguage,
 } from "../../lib/adminApi";
+import { adminUrl } from "../../lib/adminPath";
 
 export function AdminCourses() {
   const [courses, setCourses] = useState<AdminCourseListItem[] | null>(null);
@@ -93,7 +94,7 @@ export function AdminCourses() {
           <p className="admin-eyebrow">Spark Academy</p>
           <h1>Courses</h1>
         </div>
-        <Link className="admin-link-button" to="/admin/courses/new">
+        <Link className="admin-link-button" to={adminUrl("/courses/new")}>
           New course
         </Link>
       </header>
@@ -145,7 +146,7 @@ export function AdminCourses() {
                   <td data-label="Updated">{new Date(course.updatedAt).toLocaleDateString()}</td>
                   <td data-label="Actions">
                     <div className="admin-row-actions">
-                      <Link className="admin-link-button" to={`/admin/courses/${encodeURIComponent(course.slug)}`}>
+                      <Link className="admin-link-button" to={adminUrl(`/courses/${encodeURIComponent(course.slug)}`)}>
                         Edit
                       </Link>
                       {course.status === "draft" ? (

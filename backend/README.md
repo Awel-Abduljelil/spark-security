@@ -21,10 +21,12 @@ In another terminal:
 ```bash
 cd frontend
 npm ci
+# Set VITE_ADMIN_PATH to the same 32-character URL-safe value as backend ADMIN_PATH.
 npm run dev               # React app at http://localhost:5173
 ```
 
 - Vite proxies `/api` and `/media` to the backend.
+- Set the same 32-character URL-safe value for `ADMIN_PATH` in `backend/.env` and `VITE_ADMIN_PATH` in `frontend/.env` to move the admin UI from `/admin` to a less discoverable URL. Rebuild the frontend after changing `VITE_ADMIN_PATH`. This obscures the UI URL but does not secure it; login, rate limiting, and two-factor authentication remain necessary.
 - Build the frontend with `cd frontend && npm run build`; when `frontend/dist` exists, Express serves the React site and admin routes at `http://localhost:3000`.
 - On first backend run an admin is created. If `ADMIN_PASSWORD` is empty, a random password is printed once in the terminal.
 - React admin sign-in uses the configured admin email and password; enter a TOTP code when two-factor authentication is enabled.
@@ -41,7 +43,7 @@ Students with a pending or approved registration cannot submit another registrat
 
 **Payment:** manual bank transfer or mobile money. The student uploads a receipt (JPEG, PNG, WebP, or PDF up to 5 MB) or pastes an https link. An admin reviews it and approves or rejects.
 
-**React admin:** enrollment dashboard and review (search, filter, pagination, private receipt viewer, approve, reject, notes, bulk verify, CSV export), courses, and cohorts. **Additional backend tools:** `/legacy-admin/` retains settings, payment methods, mentors, FAQs, contact messages, security (password change, TOTP 2FA), and audit log.
+**Admin:** The configured admin URL manages enrollments (search, filter, pagination, private receipt viewer, approve, reject, notes, bulk verify, CSV export), courses, cohorts, website content, payment methods, mentors, FAQs, contact messages, security (password change, TOTP 2FA), and audit log. Without `ADMIN_PATH` / `VITE_ADMIN_PATH`, the URL remains `/admin`. The former `/legacy-admin/` URL redirects to the merged Management screen.
 
 Existing course capacity, effective price, and schedule are migrated into an initial cohort at startup. A cohort capacity of `0` means unlimited. Existing enrollment records are associated with that cohort; unknown start dates remain unset.
 
@@ -67,9 +69,9 @@ Existing course capacity, effective price, and schedule are migrated into an ini
 
 ## Manual configuration still needed
 
-- Replace the placeholder bank and mobile money details (`/legacy-admin/` > Payment methods).
-- Fill in contact email, phone, and social links (`/legacy-admin/` > Website content).
-- Manage real mentor profiles (`/legacy-admin/` > Mentors): publish/unpublish, edit profiles and achievements, set their display order, and upload JPEG, PNG, or WebP photos up to 2 MB. Unpublished profiles are not returned publicly.
+- Replace the placeholder bank and mobile money details (`/admin` > Management > Payment methods).
+- Fill in contact email, phone, and social links (`/admin` > Management > Website content).
+- Manage real mentor profiles (`/admin` > Management > Mentors): publish/unpublish, edit profiles and achievements, set their display order, and upload JPEG, PNG, or WebP photos up to 2 MB. Unpublished profiles are not returned publicly.
 - In React Admin > Courses, set a course cover and lead instructor photo by URL or upload. Uploaded JPEG, PNG, and WebP files are limited to 2 MB; the cover is displayed in a split hero and the instructor photo appears with the instructor details.
 - Privacy Policy and Terms pages are not included; the consent checkbox is.
 - Rejection permanently deletes the enrollment and its uploaded receipt after admin confirmation. Rejected enrollments cannot be restored.

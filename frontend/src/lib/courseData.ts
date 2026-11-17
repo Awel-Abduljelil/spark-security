@@ -17,6 +17,12 @@ export function mapApiCourseCard(course: ApiCourseCard): Course {
     sessions: course.sessions,
     labs: course.labs,
     price,
+    ...(course.cover ? { cover: course.cover } : {}),
+    ...(course.priceEtb !== undefined ? { priceEtb: course.priceEtb } : {}),
+    ...(course.discountPriceEtb !== undefined
+      ? { discountPriceEtb: course.discountPriceEtb }
+      : {}),
+    enrollmentOpen: course.enrollmentOpen ?? Boolean(course.nextCohort),
     ...(course.tag ? { tag: course.tag } : {}),
     description: course.description,
     skills: course.skills,

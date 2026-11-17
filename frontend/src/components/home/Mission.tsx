@@ -54,7 +54,7 @@ export function Mission() {
           <span />
           <span />
           <span />
-          <strong>S</strong>
+          <strong>SPARK</strong>
         </div>
       </div>
     </section>

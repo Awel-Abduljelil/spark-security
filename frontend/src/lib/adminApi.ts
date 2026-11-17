@@ -1,3 +1,4 @@
+import { adminUrl } from "./adminPath";
 import axios from "axios";
 import type {
   AdminCohort,
@@ -52,6 +53,66 @@ export type {
   MoveEnrollmentRequest,
 } from "../types/apiContract";
 
+export interface LegacySettings {
+  [key: string]: string;
+}
+
+export interface LegacyMentor {
+  id: number;
+  name: string;
+  role: string;
+  bio: string;
+  specialties: string[];
+  achievements: string[];
+  photo: string;
+  linkedin: string;
+  github: string;
+  published: number;
+  sort: number;
+}
+
+export interface LegacyFaq {
+  id: number;
+  question: string;
+  answer: string;
+  published: number;
+  sort: number;
+}
+
+export interface LegacyPaymentMethod {
+  id: number;
+  type: string;
+  bank: string;
+  holder: string;
+  number: string;
+  notes: string;
+  active: number;
+  sort: number;
+}
+
+export interface LegacyMessage {
+  id: number;
+  name: string;
+  email: string;
+  body: string;
+  read: number;
+  created_at: number;
+}
+
+export interface LegacyAuditEntry {
+  email: string;
+  action: string;
+  entity: string | null;
+  detail: string | null;
+  ip: string;
+  created_at: number;
+}
+
+export interface LegacyAdminInfo {
+  email: string;
+  totp: boolean;
+}
+
 export class AdminApiError extends Error {
   readonly status: number;
   readonly issues: AdminValidationIssue[];
@@ -86,7 +147,7 @@ adminApi.interceptors.response.use(
         !url.includes("/api/app/admin/login") &&
         !url.includes("/api/app/admin/me")
       ) {
-        window.location.assign("/admin/login");
+        window.location.assign(adminUrl("/login"));
       }
     }
     return Promise.reject(error);
@@ -100,7 +161,9 @@ function normalizedError(error: unknown): Error {
       const message =
         "message" in body && typeof body.message === "string"
           ? body.message
-          : "The admin request failed. Please try again.";
+          : "error" in body && typeof body.error === "string"
+            ? body.error
+            : "The admin request failed. Please try again.";
       const issues =
         "issues" in body && Array.isArray(body.issues)
           ? body.issues.filter(
@@ -150,6 +213,97 @@ export function logout(): Promise<AdminOkResponse> {
 
 export function me(): Promise<AdminOkResponse> {
   return request(() => adminApi.get<AdminOkResponse>("/api/app/admin/me"));
+}
+
+export function getLegacyAdminInfo(): Promise<LegacyAdminInfo> {
+  return request(() => adminApi.get<LegacyAdminInfo>("/api/admin/me"));
+}
+
+export function getLegacySettings(): Promise<LegacySettings> {
+  return request(() => adminApi.get<LegacySettings>("/api/admin/settings"));
+}
+
+export function updateLegacySettings(settings: LegacySettings): Promise<AdminOkResponse> {
+  return request(() => adminApi.put<AdminOkResponse>("/api/admin/settings", settings));
+}
+
+export function listMentors(): Promise<LegacyMentor[]> {
+  return request(() => adminApi.get<LegacyMentor[]>("/api/admin/mentors"));
+}
+
+export function saveMentor(id: number | null, input: Omit<LegacyMentor, "id">): Promise<LegacyMentor> {
+  return request(() => id === null
+    ? adminApi.post<LegacyMentor>("/api/admin/mentors", input)
+    : adminApi.put<LegacyMentor>(`/api/admin/mentors/${id}`, input));
+}
+
+export function deleteMentor(id: number): Promise<AdminOkResponse> {
+  return request(() => adminApi.delete<AdminOkResponse>(`/api/admin/mentors/${id}`));
+}
+
+export function listFaqs(): Promise<LegacyFaq[]> {
+  return request(() => adminApi.get<LegacyFaq[]>("/api/admin/faqs"));
+}
+
+export function saveFaq(id: number | null, input: Omit<LegacyFaq, "id">): Promise<LegacyFaq> {
+  return request(() => id === null
+    ? adminApi.post<LegacyFaq>("/api/admin/faqs", input)
+    : adminApi.put<LegacyFaq>(`/api/admin/faqs/${id}`, input));
+}
+
+export function deleteFaq(id: number): Promise<AdminOkResponse> {
+  return request(() => adminApi.delete<AdminOkResponse>(`/api/admin/faqs/${id}`));
+}
+
+export function listPaymentMethods(): Promise<LegacyPaymentMethod[]> {
+  return request(() => adminApi.get<LegacyPaymentMethod[]>("/api/admin/payment-methods"));
+}
+
+export function savePaymentMethod(id: number | null, input: Omit<LegacyPaymentMethod, "id">): Promise<LegacyPaymentMethod> {
+  return request(() => id === null
+    ? adminApi.post<LegacyPaymentMethod>("/api/admin/payment-methods", input)
+    : adminApi.put<LegacyPaymentMethod>(`/api/admin/payment-methods/${id}`, input));
+}
+
+export function deletePaymentMethod(id: number): Promise<AdminOkResponse> {
+  return request(() => adminApi.delete<AdminOkResponse>(`/api/admin/payment-methods/${id}`));
+}
+
+export function listMessages(): Promise<LegacyMessage[]> {
+  return request(() => adminApi.get<LegacyMessage[]>("/api/admin/messages"));
+}
+
+export function markMessageRead(id: number): Promise<AdminOkResponse> {
+  return request(() => adminApi.put<AdminOkResponse>(`/api/admin/messages/${id}/read`));
+}
+
+export function deleteMessage(id: number): Promise<AdminOkResponse> {
+  return request(() => adminApi.delete<AdminOkResponse>(`/api/admin/messages/${id}`));
+}
+
+export function listAuditEntries(): Promise<LegacyAuditEntry[]> {
+  return request(() => adminApi.get<LegacyAuditEntry[]>("/api/admin/audit"));
+}
+
+export function changeAdminPassword(input: { current: string; next: string; confirm: string }): Promise<AdminOkResponse> {
+  return request(() => adminApi.post<AdminOkResponse>("/api/admin/password", input));
+}
+
+export interface TotpSetup {
+  secret: string;
+  uri: string;
+}
+
+export function setupAdminTotp(): Promise<TotpSetup> {
+  return request(() => adminApi.post<TotpSetup>("/api/admin/2fa/setup"));
+}
+
+export function enableAdminTotp(code: string): Promise<AdminOkResponse> {
+  return request(() => adminApi.post<AdminOkResponse>("/api/admin/2fa/enable", { code }));
+}
+
+export function disableAdminTotp(password: string): Promise<AdminOkResponse> {
+  return request(() => adminApi.post<AdminOkResponse>("/api/admin/2fa/disable", { password }));
 }
 
 export function getSummary(): Promise<AdminSummary> {

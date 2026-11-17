@@ -50,6 +50,10 @@ export interface ApiCourseCard {
   description: string;
   skills: string[];
   nextCohort: CourseNextCohort | null;
+  cover?: string | null;
+  priceEtb?: number;
+  discountPriceEtb?: number | null;
+  enrollmentOpen?: boolean;
 }
 
 export type CoursesResponse = ApiCourseCard[];

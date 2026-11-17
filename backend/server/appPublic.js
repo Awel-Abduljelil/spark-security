@@ -54,6 +54,7 @@ function courseContent(course) {
 }
 
 function card(course) {
+  const cohort = nextCohort(course.id);
   return {
     slug: course.slug,
     title: course.title,
@@ -65,7 +66,11 @@ function card(course) {
     tag: course.tag || null,
     description: course.short || course.description || '',
     skills: parseJ(course.skills).length ? parseJ(course.skills) : parseJ(course.topics),
-    nextCohort: nextCohort(course.id),
+    cover: course.cover || null,
+    priceEtb: course.price,
+    discountPriceEtb: cohort?.priceEtb ?? course.discount ?? null,
+    enrollmentOpen: !!cohort,
+    nextCohort: cohort,
   };
 }
 

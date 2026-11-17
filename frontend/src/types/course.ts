@@ -17,6 +17,10 @@ export interface Course {
   sessions: number;
   labs: number;
   price: string;
+  priceEtb?: number;
+  discountPriceEtb?: number | null;
+  enrollmentOpen?: boolean;
+  cover?: string | null;
   tag?: string;
   description: string;
   skills?: string[];

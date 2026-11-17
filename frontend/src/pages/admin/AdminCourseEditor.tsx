@@ -14,6 +14,7 @@ import {
   type CourseLanguage,
   type AdminValidationIssue,
 } from "../../lib/adminApi";
+import { adminUrl } from "../../lib/adminPath";
 
 interface EditorValues {
   slug: string;
@@ -274,7 +275,7 @@ export function AdminCourseEditor({ isNew = false }: { isNew?: boolean }) {
       if (isNew) {
         const created = await createCourse(payload);
         setSuccess("Course created.");
-        navigate(`/admin/courses/${encodeURIComponent(created.slug)}`, { replace: true });
+        navigate(adminUrl(`/courses/${encodeURIComponent(created.slug)}`), { replace: true });
       } else if (slug) {
         await updateCourse(slug, {
           status: payload.status,
@@ -321,7 +322,7 @@ export function AdminCourseEditor({ isNew = false }: { isNew?: boolean }) {
           <p className="admin-eyebrow">Spark Academy</p>
           <h1>{isNew ? "New course" : "Edit course"}</h1>
         </div>
-        <Link className="admin-link-button" to="/admin/courses">Back to courses</Link>
+        <Link className="admin-link-button" to={adminUrl("/courses")}>Back to courses</Link>
       </header>
       {pageError && <p className="admin-error" role="alert">{pageError}</p>}
       {success && <p className="admin-success" role="status">{success}</p>}

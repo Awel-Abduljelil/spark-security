@@ -9,6 +9,7 @@ import {
   listCourses,
   me,
 } from "../src/lib/adminApi";
+import { adminUrl } from "../src/lib/adminPath";
 import { backendUp } from "./live";
 
 const assign = vi.fn();
@@ -36,7 +37,7 @@ describe.skipIf(!backendUp)("admin API client (live backend, unauthenticated)", 
   it("redirects to /admin/login on 401 for non-exempt admin routes", async () => {
     await listCourses().catch(() => undefined);
     expect(assign).toHaveBeenCalledTimes(1);
-    expect(assign).toHaveBeenCalledWith("/admin/login");
+    expect(assign).toHaveBeenCalledWith(adminUrl("/login"));
   });
 
   it("does not redirect for the exempt /api/app/admin/me route", async () => {

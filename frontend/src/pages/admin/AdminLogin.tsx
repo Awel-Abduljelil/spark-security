@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "../../lib/adminApi";
+import { adminUrl } from "../../lib/adminPath";
 
 export function AdminLogin() {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ export function AdminLogin() {
     setError("");
     try {
       await login(email, password, code);
-      navigate("/admin", { replace: true });
+      navigate(adminUrl(), { replace: true });
     } catch (requestError) {
       setError(
         requestError instanceof Error
