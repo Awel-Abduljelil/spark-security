@@ -1,9 +1,11 @@
 # Spark Security
 
+This is the retained legacy Node.js + SQLite backend. Production migration to PHP + MySQL, including export/import instructions, is documented in [the PHP deployment guide](../php/README.md). Keep this backend and its database intact until the PHP deployment and data import have been verified.
+
 Cybersecurity training and enrollment website with a secure admin dashboard.
 React + Vite frontend with Node.js + Express + SQLite (built-in `node:sqlite`) backend; no student accounts.
 
-## Quick start
+## Legacy Node quick start
 
 Requires **Node.js 22.13 or newer**.
 
@@ -57,15 +59,9 @@ Existing course capacity, effective price, and schedule are migrated into an ini
 - Prices are read from the database on the server; the amount is snapshotted on each enrollment.
 - Security headers and a strict Content-Security-Policy are set on every response.
 
-## Deployment
+## Production deployment
 
-1. Build the React site with `cd frontend && npm ci && npm run build`.
-2. Set `NODE_ENV=production`, `TRUST_PROXY=1` (behind a proxy), `ADMIN_EMAIL`, `ADMIN_PASSWORD`, and `DATA_DIR` for the backend.
-3. Install backend dependencies and run `cd backend && npm ci && npm start`. Express serves both the React app and API from one origin.
-4. Serve over HTTPS (Caddy or Nginx in front of the backend). Secure cookies need HTTPS.
-5. Run under a process manager (systemd, pm2, Docker).
-6. **Back up `DATA_DIR`** (database and receipts) and `public/media` (uploaded images). Test a restore.
-7. Rate limiting is in memory, so run a single instance.
+Do not use the legacy Node deployment steps for the migrated production site. Use the [PHP + MySQL Plesk guide](../php/README.md). The legacy backend remains available for local regression tests and one-time SQLite data export only.
 
 ## Manual configuration still needed
 

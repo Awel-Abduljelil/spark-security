@@ -8,6 +8,10 @@
 **/data/
 **/public/media/*
 !**/public/media/.gitkeep
+php/config.local.php
+php/storage/
 *.db
 *.db-shm
 *.db-wal
+!frontend/src/data/
+!frontend/src/data/**

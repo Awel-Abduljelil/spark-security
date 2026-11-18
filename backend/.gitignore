@@ -3,3 +3,5 @@ data
 .env
 public/media/*
 !public/media/.gitkeep
+!frontend/src/data/
+!frontend/src/data/**
