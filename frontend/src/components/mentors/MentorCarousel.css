@@ -65,7 +65,8 @@
   flex: 0 0 var(--mentor-slide-width);
   display: flex;
   flex-direction: column;
-  min-height: 40rem;
+  height: clamp(30rem, 68svh, 38rem);
+  min-height: 0;
   padding: 0;
   position: relative;
   overflow: hidden;
@@ -105,40 +106,120 @@
   margin-top: auto;
   box-sizing: border-box;
   align-content: end;
+  gap: var(--space-sm);
   padding: 4rem var(--space-lg) var(--space-lg);
   background: linear-gradient(180deg, transparent 0%, rgb(5 5 5 / 0.88) 2.5rem, #050505 7rem);
 }
 .mentor-card__body h3 { overflow-wrap: anywhere; }
-.mentor-card__bio { line-height: 1.5; }
+.mentor-card__bio {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  line-height: 1.5;
+}
 .mentor-card__body > * { min-width: 0; overflow-wrap: anywhere; }
-.mentor-card__achievements { display: grid; gap: var(--space-xs); margin-top: var(--space-xs); }
-.mentor-card__achievements h4 { margin: 0; color: var(--ink); font-size: var(--font-sm); }
-.mentor-card__achievements ul { margin: 0; padding-inline-start: 1.25rem; color: var(--ink-dim); }
-.mentor-card__links { display: flex; flex-wrap: wrap; gap: var(--space-sm); margin-top: var(--space-sm); }
-.mentor-card__links a {
-  display: grid;
-  place-items: center;
-  width: 2.75rem;
-  height: 2.75rem;
+.mentor-card__specialties { max-height: 4.5rem; overflow: hidden; }
+.mentor-card__details {
+  justify-self: start;
+  min-height: 2.75rem;
+  padding: 0.6rem 1rem;
   border: 1px solid var(--border);
-  border-radius: 50%;
+  border-radius: 999px;
   background: rgb(5 5 5 / 0.78);
   color: var(--accent);
-  text-decoration: none;
-  transition: color 150ms ease, background-color 150ms ease, border-color 150ms ease, transform 150ms ease;
+  font: inherit;
+  cursor: pointer;
+  transition: color 150ms ease, background-color 150ms ease, border-color 150ms ease;
 }
-.mentor-card__links a:hover {
+.mentor-card__details:hover {
   border-color: var(--accent);
   background: var(--surface-accent);
   color: var(--ink);
-  transform: translateY(-2px);
 }
-.mentor-card__links svg { display: block; width: 1.25rem; height: 1.25rem; fill: currentColor; }
-.mentor-card__social-fallback { font-weight: 700; font-size: 1.1rem; line-height: 1; }
-.mentor-card__links a:focus-visible, .mentor-carousel__arrow:focus-visible, .mentor-carousel__dot:focus-visible {
+.mentor-card__details:focus-visible, .mentor-carousel__arrow:focus-visible, .mentor-carousel__dot:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
 }
+
+.mentor-detail-dialog {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: var(--space-lg);
+  place-items: center;
+  box-sizing: border-box;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+}
+.mentor-detail-dialog[open] { display: grid; }
+.mentor-detail-dialog::backdrop {
+  background: rgb(0 0 0 / 0.78);
+  backdrop-filter: blur(4px);
+}
+.mentor-detail-dialog__panel {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 12rem) minmax(0, 1fr);
+  width: min(100%, 48rem);
+  max-height: min(84vh, 48rem);
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--border-radius);
+  background: var(--surface);
+  box-shadow: 0 1.5rem 5rem rgb(0 0 0 / 0.55), 0 0 2rem var(--accent-glow);
+}
+.mentor-detail-dialog__photo {
+  width: 100%;
+  height: 100%;
+  min-height: 16rem;
+  object-fit: cover;
+  object-position: center 16%;
+  background: var(--surface-bright);
+}
+.mentor-detail-dialog__content {
+  display: grid;
+  align-content: start;
+  gap: var(--space-md);
+  min-width: 0;
+  padding: var(--space-xl);
+}
+.mentor-detail-dialog__content h2 {
+  margin: 0;
+  padding-right: var(--space-2xl);
+  color: var(--accent);
+  font-size: var(--font-xl);
+}
+.mentor-detail-dialog__content p { margin: 0; color: var(--ink-dim); overflow-wrap: anywhere; }
+.mentor-detail-dialog__section { display: grid; gap: var(--space-xs); }
+.mentor-detail-dialog__section h3 { margin: 0; font-size: var(--font-md); }
+.mentor-detail-dialog__section ul { margin: 0; padding-inline-start: 1.25rem; color: var(--ink-dim); }
+.mentor-detail-dialog__links { display: flex; flex-wrap: wrap; gap: var(--space-sm); }
+.mentor-detail-dialog__links a { color: var(--accent); overflow-wrap: anywhere; }
+.mentor-detail-dialog__close {
+  position: absolute;
+  top: var(--space-md);
+  right: var(--space-md);
+  z-index: 1;
+  display: grid;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--surface-dim);
+  color: var(--ink);
+  font-size: var(--font-lg);
+  cursor: pointer;
+}
+.mentor-detail-dialog__close:hover { background: var(--surface-bright); }
+.mentor-detail-dialog__close:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 
 @media (max-width: 48rem) {
   .mentor-carousel { --mentor-slide-width: min(78vw, 22rem); }
@@ -148,16 +229,22 @@
     transform: translateZ(calc(var(--distance) * -2rem)) scale(var(--scale));
   }
   .mentor-carousel__controls { gap: var(--space-md); }
-  .mentor-carousel__slide { min-height: 42rem; }
+  .mentor-carousel__slide { height: clamp(29rem, 68svh, 34rem); }
   .mentor-card__body { padding-inline: var(--space-md); }
+  .mentor-detail-dialog__panel { grid-template-columns: 1fr; }
+  .mentor-detail-dialog__photo { height: 12rem; min-height: 0; }
+  .mentor-detail-dialog__content { padding: var(--space-lg); }
 }
 @media (max-width: 22rem) {
   .mentor-carousel { --mentor-slide-width: 82vw; }
   .mentor-card__body { padding-inline: var(--space-sm); }
+  .mentor-detail-dialog { padding: var(--space-sm); }
+  .mentor-detail-dialog__photo { height: 9rem; }
+  .mentor-detail-dialog__content { padding: var(--space-md); }
 }
 @media (min-width: 48.01rem) and (max-width: 70rem) {
   .mentor-carousel { --mentor-slide-width: clamp(19rem, 40vw, 22rem); }
-  .mentor-carousel__slide { min-height: 42rem; }
+  .mentor-carousel__slide { height: clamp(32rem, 68svh, 38rem); }
 }
 @media (prefers-reduced-motion: reduce) {
   .mentor-carousel__slide { --rotation: 0deg !important; transition: opacity 150ms linear, transform 150ms linear; }

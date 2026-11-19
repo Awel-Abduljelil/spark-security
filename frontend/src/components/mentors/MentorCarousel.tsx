@@ -27,14 +27,22 @@ export function MentorCarousel({ mentors }: { mentors: MentorProfile[] }) {
   const touchTimerRef = useRef<number | null>(null);
   const dragRef = useRef<{ pointerId: number; x: number; scrollLeft: number } | null>(null);
   const draggedRef = useRef(false);
+  const detailDialogRef = useRef<HTMLDialogElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [activePhysicalIndex, setActivePhysicalIndex] = useState(mentors.length);
+  const [selectedMentor, setSelectedMentor] = useState<MentorProfile | null>(null);
   const [reduceMotion, setReduceMotion] = useState(prefersReducedMotion);
   const [interacting, setInteracting] = useState(false);
   const copies = 3;
   const accessibilityCopy = mentors.length
     ? Math.floor(activePhysicalIndex / mentors.length)
     : 0;
+
+  useEffect(() => {
+    const dialog = detailDialogRef.current;
+    if (!selectedMentor || !dialog || dialog.open) return;
+    dialog.showModal();
+  }, [selectedMentor]);
 
   const measureSlides = useCallback(() => {
     const viewport = viewportRef.current;
@@ -162,7 +170,7 @@ export function MentorCarousel({ mentors }: { mentors: MentorProfile[] }) {
 
   useEffect(() => {
     const viewport = viewportRef.current;
-    if (!viewport || reduceMotion || interacting || mentors.length < 2) return;
+    if (!viewport || reduceMotion || interacting || selectedMentor || mentors.length < 2) return;
     const firstMiddleSlide = slideRefs.current[mentors.length];
     const firstLastSlide = slideRefs.current[mentors.length * (copies - 1)];
     if (!firstMiddleSlide || !firstLastSlide) return;
@@ -180,7 +188,7 @@ export function MentorCarousel({ mentors }: { mentors: MentorProfile[] }) {
     };
     animationFrame = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(animationFrame);
-  }, [interacting, mentors.length, reduceMotion]);
+  }, [interacting, mentors.length, reduceMotion, selectedMentor]);
 
   const moveBy = (amount: number) => {
     centerSlide(Math.max(0, Math.min(mentors.length - 1, activeIndex + amount)));
@@ -249,7 +257,7 @@ export function MentorCarousel({ mentors }: { mentors: MentorProfile[] }) {
   return (
     <section
       className="mentor-carousel"
-      data-autoplaying={!reduceMotion && !interacting && mentors.length > 1}
+      data-autoplaying={!reduceMotion && !interacting && !selectedMentor && mentors.length > 1}
       role="region"
       aria-label="Mentors"
       aria-roledescription="carousel"
@@ -305,7 +313,10 @@ export function MentorCarousel({ mentors }: { mentors: MentorProfile[] }) {
               aria-current={isActive ? "true" : undefined}
               aria-hidden={copy !== accessibilityCopy}
               onFocusCapture={() => centerSlide(index, "smooth", physicalIndex)}
-              onClick={() => centerSlide(index, "smooth", physicalIndex)}
+              onClick={() => {
+                if (isActive) setSelectedMentor(mentor);
+                else centerSlide(index, "smooth", physicalIndex);
+              }}
             >
               {mentor.photo
                 ? <img className="mentor-card__photo" src={mentor.photo} alt={mentor.name} loading="lazy" draggable={false} />
@@ -313,45 +324,90 @@ export function MentorCarousel({ mentors }: { mentors: MentorProfile[] }) {
               <div className="mentor-card__body">
                 <h3>{mentor.name}</h3>
                 <span className="mentor-card__role">{mentor.role}</span>
-                <p className="mentor-card__bio">{mentor.bio}</p>
-                <div className="chips">
-                  {mentor.specialties.map((specialty) => (
+                <p className="mentor-card__bio mentor-card__bio--clamped">{mentor.bio}</p>
+                <div className="chips mentor-card__specialties">
+                  {mentor.specialties.slice(0, 3).map((specialty) => (
                     <span className="chip" key={specialty}>{specialty}</span>
                   ))}
+                  {mentor.specialties.length > 3 && (
+                    <span className="chip">+{mentor.specialties.length - 3}</span>
+                  )}
                 </div>
-                {mentor.achievements.length > 0 && (
-                  <div className="mentor-card__achievements">
-                    <h4>{t("Verified achievements")}</h4>
-                    <ul>{mentor.achievements.map((achievement) => <li key={achievement}>{achievement}</li>)}</ul>
-                  </div>
-                )}
-                {mentor.links.length > 0 && (
-                  <div className="mentor-card__links">
-                    {mentor.links.map((link) => (
-                      <a key={link.url} href={link.url} target="_blank" rel="noopener noreferrer"
-                        aria-label={link.label}
-                        title={link.label}
-                        tabIndex={copy === accessibilityCopy ? 0 : -1}>
-                        {link.label.toLowerCase() === "linkedin" ? (
-                          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                            <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14Zm-10.7 7H5.6v8.4h2.7V10Zm8.5 0c-1.3 0-2.1.7-2.5 1.3V10h-2.7v8.4h2.7v-4.5c0-1.2.2-2.3 1.6-2.3s1.4 1.3 1.4 2.4v4.4H20v-5c0-2.5-.5-4.4-3.2-4.4ZM7 5.8a1.6 1.6 0 1 0 0 3.2 1.6 1.6 0 0 0 0-3.2Z" />
-                          </svg>
-                        ) : link.label.toLowerCase() === "github" ? (
-                          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                            <path d="M12 .9a11.1 11.1 0 0 0-3.5 21.6c.6.1.8-.2.8-.6v-2.1c-3.1.7-3.8-1.3-3.8-1.3-.5-1.3-1.2-1.6-1.2-1.6-1-.7.1-.7.1-.7 1.1.1 1.7 1.1 1.7 1.1 1 .1.8 2.2 3.7 1.5.1-.7.4-1.2.7-1.5-2.5-.3-5.1-1.2-5.1-5.5 0-1.2.4-2.1 1.1-2.9-.1-.3-.5-1.4.1-2.9 0 0 .9-.3 3 1.1a10.5 10.5 0 0 1 5.4 0c2.1-1.4 3-1.1 3-1.1.6 1.5.2 2.6.1 2.9.7.8 1.1 1.7 1.1 2.9 0 4.3-2.6 5.2-5.1 5.5.4.3.8 1 .8 2v2.7c0 .4.2.7.8.6A11.1 11.1 0 0 0 12 .9Z" />
-                          </svg>
-                        ) : (
-                          <span className="mentor-card__social-fallback" aria-hidden="true">{link.label.slice(0, 1)}</span>
-                        )}
-                      </a>
-                    ))}
-                  </div>
-                )}
+                <button className="mentor-card__details" type="button"
+                  aria-haspopup="dialog"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    setSelectedMentor(mentor);
+                  }}>
+                  {t("View details")}
+                </button>
               </div>
             </article>
           );
         })}
       </div>
+      {selectedMentor && (
+        <dialog
+          className="mentor-detail-dialog"
+          ref={detailDialogRef}
+          aria-labelledby="mentor-detail-dialog-title"
+          onClose={() => setSelectedMentor(null)}
+          onClick={(event) => {
+            if (event.target === event.currentTarget) detailDialogRef.current?.close();
+          }}
+        >
+          <article className="mentor-detail-dialog__panel">
+            <button
+              className="mentor-detail-dialog__close"
+              type="button"
+              aria-label={t("Close mentor details")}
+              onClick={() => detailDialogRef.current?.close()}
+            >
+              ×
+            </button>
+            {selectedMentor.photo && (
+              <img className="mentor-detail-dialog__photo" src={selectedMentor.photo} alt="" />
+            )}
+            <div className="mentor-detail-dialog__content">
+              <h2 id="mentor-detail-dialog-title">{selectedMentor.name}</h2>
+              <span className="mentor-card__role">{selectedMentor.role}</span>
+              <p>{selectedMentor.bio}</p>
+              {selectedMentor.specialties.length > 0 && (
+                <div className="mentor-detail-dialog__section">
+                  <h3>{t("Specialties")}</h3>
+                  <div className="chips">
+                    {selectedMentor.specialties.map((specialty) => (
+                      <span className="chip" key={specialty}>{specialty}</span>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {selectedMentor.achievements.length > 0 && (
+                <div className="mentor-detail-dialog__section">
+                  <h3>{t("Verified achievements")}</h3>
+                  <ul>
+                    {selectedMentor.achievements.map((achievement) => (
+                      <li key={achievement}>{achievement}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {selectedMentor.links.length > 0 && (
+                <div className="mentor-detail-dialog__section">
+                  <h3>{t("Connect")}</h3>
+                  <div className="mentor-detail-dialog__links">
+                    {selectedMentor.links.map((link) => (
+                      <a key={link.url} href={link.url} target="_blank" rel="noopener noreferrer">
+                        {link.label}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </article>
+        </dialog>
+      )}
     </section>
   );
 }

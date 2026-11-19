@@ -4,6 +4,11 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { LanguageProvider } from "../src/i18n/LanguageContext";
 import { MentorCarousel, type MentorProfile } from "../src/components/mentors/MentorCarousel";
 
+const dialogMethodDescriptors = ["showModal", "close"].map((method) => ({
+  method,
+  descriptor: Object.getOwnPropertyDescriptor(HTMLDialogElement.prototype, method),
+}));
+
 const mentors: MentorProfile[] = [
   {
     id: "1",
@@ -42,6 +47,10 @@ function renderCarousel(profiles = mentors) {
 afterEach(() => {
   cleanup();
   vi.unstubAllGlobals();
+  dialogMethodDescriptors.forEach(({ method, descriptor }) => {
+    if (descriptor) Object.defineProperty(HTMLDialogElement.prototype, method, descriptor);
+    else Reflect.deleteProperty(HTMLDialogElement.prototype, method);
+  });
 });
 
 describe("mentor carousel", () => {
@@ -64,7 +73,18 @@ describe("mentor carousel", () => {
     expect(screen.getByRole("group", { name: "3 of 3: Caro Mentor" }).classList.contains("is-active")).toBe(true);
   });
 
-  it("shows each mentor's full details and links and applies the center scale", async () => {
+  it("keeps slide summaries compact and opens full details in a dialog", async () => {
+    Object.defineProperty(HTMLDialogElement.prototype, "showModal", {
+      configurable: true,
+      value(this: HTMLDialogElement) { this.setAttribute("open", ""); },
+    });
+    Object.defineProperty(HTMLDialogElement.prototype, "close", {
+      configurable: true,
+      value(this: HTMLDialogElement) {
+        this.removeAttribute("open");
+        this.dispatchEvent(new Event("close"));
+      },
+    });
     renderCarousel();
     const region = screen.getByRole("region", { name: "Mentors" });
     const viewport = region.querySelector(".mentor-carousel__viewport") as HTMLDivElement;
@@ -81,17 +101,42 @@ describe("mentor carousel", () => {
       expect(slides[0].style.getPropertyValue("--scale")).toBe("1.000");
       expect(slides[1].style.getPropertyValue("--scale")).toBe("0.920");
     });
-    expect(screen.getByRole("link", { name: "LinkedIn" }).getAttribute("tabindex")).not.toBe("-1");
-    expect(screen.getByRole("link", { name: "GitHub" }).getAttribute("tabindex")).not.toBe("-1");
     const sideMentor = slides[1];
     expect(sideMentor.querySelector(".mentor-card__bio")?.textContent).toBe(mentors[1].bio);
-    expect(sideMentor.querySelector(".mentor-card__bio")?.classList.contains("mentor-card__bio--clamped")).toBe(false);
-    expect(sideMentor.querySelector("a")?.getAttribute("aria-label")).toBe("GitHub");
-    expect(sideMentor.querySelector("a svg")?.getAttribute("aria-hidden")).toBe("true");
-    expect(slides[0].textContent).toContain("Published security research");
+    expect(sideMentor.querySelector(".mentor-card__bio")?.classList.contains("mentor-card__bio--clamped")).toBe(true);
+    expect(sideMentor.textContent).not.toContain("Published security research");
+    expect(sideMentor.querySelectorAll(".mentor-card__details").length).toBe(1);
     fireEvent.click(screen.getByRole("group", { name: "2 of 3: Bek Mentor" }));
-    expect(screen.getByRole("link", { name: "LinkedIn" }).getAttribute("tabindex")).not.toBe("-1");
-    expect(screen.getByRole("link", { name: "GitHub" }).getAttribute("tabindex")).not.toBe("-1");
+    fireEvent.click(screen.getAllByRole("button", { name: "View details" })[0]);
+    const dialog = screen.getByRole("dialog", { name: "Ada Mentor" });
+    expect(region.getAttribute("data-autoplaying")).toBe("false");
+    expect(dialog.textContent).toContain("Published security research");
+    expect(screen.getByRole("link", { name: "LinkedIn" }).getAttribute("href")).toBe("https://linkedin.example/ada");
+    fireEvent.click(screen.getByRole("button", { name: "Close mentor details" }));
+    expect(screen.queryByRole("dialog")).toBeNull();
+    expect(region.getAttribute("data-autoplaying")).toBe("true");
+    fireEvent.click(screen.getByRole("group", { name: "2 of 3: Bek Mentor" }));
+    expect(screen.getByRole("dialog", { name: "Bek Mentor" })).toBeTruthy();
+  });
+
+  it("shows a long bio in the dialog without adding it to the card summary", () => {
+    Object.defineProperty(HTMLDialogElement.prototype, "showModal", {
+      configurable: true,
+      value(this: HTMLDialogElement) { this.setAttribute("open", ""); },
+    });
+    Object.defineProperty(HTMLDialogElement.prototype, "close", {
+      configurable: true,
+      value(this: HTMLDialogElement) {
+        this.removeAttribute("open");
+        this.dispatchEvent(new Event("close"));
+      },
+    });
+    const longBio = "A detailed mentor biography. ".repeat(20);
+    renderCarousel([{ ...mentors[0], bio: longBio }]);
+    const card = screen.getByRole("group", { name: "1 of 1: Ada Mentor" });
+    expect(card.querySelector(".mentor-card__bio")?.textContent).toBe(longBio);
+    fireEvent.click(screen.getByRole("button", { name: "View details" }));
+    expect(screen.getByRole("dialog", { name: "Ada Mentor" }).textContent).toContain(longBio);
   });
 
   it("moves between mentors with the keyboard", () => {
