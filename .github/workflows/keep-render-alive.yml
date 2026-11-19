@@ -1,0 +1,35 @@
+name: Keep Render site alive
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+jobs:
+  keep-render-alive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Check Render site
+        shell: bash
+        run: |
+          if http_status=$(curl \
+            --silent \
+            --show-error \
+            --location \
+            --fail-with-body \
+            --connect-timeout 10 \
+            --max-time 30 \
+            --retry 2 \
+            --retry-delay 5 \
+            --retry-connrefused \
+            --output /dev/null \
+            --write-out '%{http_code}' \
+            https://spark-security-b7qm.onrender.com/); then
+            echo "HTTP status: ${http_status:-000}"
+            echo "Request result: SUCCESS"
+          else
+            curl_exit_code=$?
+            echo "HTTP status: ${http_status:-000}"
+            echo "::warning::Request result: FAILED (curl exit code ${curl_exit_code})"
+          fi
